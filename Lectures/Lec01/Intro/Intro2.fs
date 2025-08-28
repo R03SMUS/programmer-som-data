@@ -26,6 +26,42 @@ type expr =
   | Prim of string * expr * expr
   | If of expr * expr * expr
 
+type aexpr = 
+  | CstI of int
+  | Var of string 
+  | Add of aexpr * aexpr
+  | Mul of aexpr * aexpr
+  | Sub of aexpr * aexpr
+
+let opgave1 = Sub(Var "v", Add(Var "w", Var "z"))
+let opgave2 = Mul(CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
+let opgave3 = Add(Var "x", Add(Var "y", Add(Var "z", Var "v")))
+
+
+
+let rec fmt input = 
+    match input with
+    | CstI i -> string i
+    | Var x -> x
+    | Add (a1, a2) -> $"({fmt a1} + {fmt a2})" 
+    | Sub (a1, a2) -> $"({fmt a1} - {fmt a2})" 
+    | Mul (a1, a2) -> $"({fmt a1} * {fmt a2})" 
+
+let rec simplify input = 
+    match input with
+    | CstI _ -> input
+    | Var _ -> input
+    | Add(CstI 0, a) | Add(a, CstI 0) -> simplify a
+    | Sub(a, CstI 0) -> simplify a
+    | Mul(CstI 1, a) | Mul (a, CstI 1) -> simplify a
+    | Mul(CstI 0, a) | Mul (a, CstI 0) -> CstI 0
+    | Sub(a,b) when a = b -> CstI 0
+    | Add(a,b) | Sub(a,b) | Mul(a,b) -> simplify a simplify b 
+let fejl = Add(CstI 0, CstI 100)
+ 
+
+let x = fmt opgave2
+
 let e1 = CstI 17;;
 
 let e2 = Prim("+", CstI 3, Var "a");;
