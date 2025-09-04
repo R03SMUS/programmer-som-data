@@ -9,6 +9,7 @@ abstract class Expr {
   abstract public int eval(Map<String,Integer> env);
   abstract public String fmt();
   abstract public String fmt2(Map<String,Integer> env);
+  abstract public Expr simplify();
 }
 
 class CstI extends Expr { 
@@ -29,6 +30,14 @@ class CstI extends Expr {
   public String fmt2(Map<String,Integer> env) {
     return ""+i;
   }
+
+    // 1.4.4
+    @Override
+    public Expr simplify() {
+        return this;
+    }
+
+
 }
 
 class Var extends Expr { 
@@ -48,7 +57,12 @@ class Var extends Expr {
 
   public String fmt2(Map<String,Integer> env) {
     return ""+env.get(name);
-  } 
+  }
+
+    @Override
+    public Expr simplify() {
+        return this;
+    }
 
 }
 
@@ -77,9 +91,95 @@ class Prim extends Expr {
 
   public String fmt2(Map<String,Integer> env) {
     return "(" + e1.fmt2(env) + oper + e2.fmt2(env) + ")";
-  } 
+  }
+
+    @Override
+    public Expr simplify() {
+        return null;
+    }
+
 
 }
+/* 1.4.1 && 1.4.3 1.4.4*/
+abstract class Binop extends Prim {
+    public Binop(String oper, Expr e1, Expr e2) {
+        super(oper, e1, e2);
+    }
+    public String toString() {
+        return "(" + e1.fmt() + oper +  e2.fmt() + ")";
+    }
+}
+
+class Add extends Binop {
+
+    public Add(Expr e1, Expr e2) {
+        super("+", e1, e2);
+    }
+
+    @Override
+    public Expr simplify() {
+
+        if (e1 instanceof CstI && e2 instanceof CstI) {
+            if(((CstI) e1).i == 0)
+                return e2.simplify();
+            else if(((CstI) e2).i == 0)
+                return e1.simplify();
+        } else if (e1 instanceof CstI) {
+            if (((CstI) e1).i == 0)
+                return e2.simplify();
+        } else if (e2 instanceof CstI) {
+            if (((CstI) e2).i == 0)
+                return e1.simplify();
+        }
+        return new Add(e1.simplify(), e2.simplify());
+
+
+    }
+}
+
+class Sub extends Binop {
+
+    public Sub(Expr e1, Expr e2) {
+        super("-", e1, e2);
+    }
+
+    @Override
+    public Expr simplify() {
+        if (e2 instanceof CstI) {
+            if (((CstI) e2).i == 0)
+                return e1.simplify();
+        }
+        if (e1 instanceof Var && e2 instanceof Var) {
+            if(((Var) e1).name.equals(((Var) e2).name))
+                return new CstI(0);
+        }
+        return new Sub(e1.simplify(), e2.simplify());
+    }
+}
+
+class Mul extends Binop {
+
+    public Mul(Expr e1, Expr e2) {
+        super("*", e1, e2);
+    }
+
+    @Override
+    public Expr simplify() {
+        if (e1 instanceof CstI) {
+            if (((CstI) e1).i == 1)
+                return e2.simplify();
+            else if (((CstI) e1).i == 0)
+                return new CstI(0);
+        } else if (e2 instanceof CstI) {
+            if (((CstI) e2).i == 1)
+                return e1.simplify();
+            else if (((CstI) e2).i == 0)
+                return new CstI(0);
+        }
+        return new Mul(e1.simplify(), e2.simplify());
+    }
+}
+
 
 public class SimpleExpr {
   public static void main(String[] args) {
@@ -94,6 +194,16 @@ public class SimpleExpr {
     env0.put("b", 111);
 
     System.out.println("Env: " + env0.toString());
+
+    /*1.4.2 */
+    System.out.println(new Add(e1, e2));
+    System.out.println(new Sub(e1, e2));
+    System.out.println(new Mul(e1, e2));
+
+
+    System.out.println(new Add(new Add(new Var("x"), new CstI(0)), new CstI(0)).simplify().fmt());
+    System.out.println(new Sub(new Var("x"), new Var("y")).simplify().fmt());
+    System.out.println(new Mul(new Var("x"), new CstI(1)).simplify().fmt());
 
     System.out.println(e1.fmt() + " = " + e1.fmt2(env0) + " = " + e1.eval(env0));
     System.out.println(e2.fmt() + " = " + e2.fmt2(env0) + " = " + e2.eval(env0));

@@ -56,9 +56,19 @@ let rec simplify input =
     | Mul(CstI 1, a) | Mul (a, CstI 1) -> simplify a
     | Mul(CstI 0, a) | Mul (a, CstI 0) -> CstI 0
     | Sub(a,b) when a = b -> CstI 0
-    | Add(a,b) | Sub(a,b) | Mul(a,b) -> simplify a simplify b 
-let fejl = Add(CstI 0, CstI 100)
- 
+    | Add(a,b) -> Add(simplify a, simplify b)
+    | Sub(a,b) -> Sub(simplify a, simplify b)
+    | Mul(a,b) -> Mul(simplify a, simplify b)
+let fejl = Add(Add(CstI 10, CstI 0), CstI 100)
+
+let rec diff apexr1 aexpr2 =
+    match aexpr1, apexr2 with
+    | _, CstI a -> CstI 0
+    | Var x, Var x -> CstI 1 //or should this be CstI? instead of Var
+    | Var x, Var y -> CstI 0 //or should this be CstI?
+    | _, Add(e1, e2) ->  Add(diff apexr1 e1, diff apexr1 e2)
+    | _, Sub(e1, e2) ->  Sub(diff apexr1 e1, diff apexr1 e2)
+    | _, Mul(e1, e2) ->  Add(Mul(diff apexr1 e1, e2), Mul(diff apexr1 e2, e1))
 
 let x = fmt opgave2
 
@@ -97,13 +107,6 @@ let rec eval e (env : (string * int) list) : int =
         | "==" -> if i1 = i2 then 1 else 0 
         | _ -> failwith "unknown primitive bad! input!"
     | If(e1, e2, e3) -> if eval e1 env > 0 then eval e2 env else eval e3 env
-        
-    (* max min == 
-    | Prim("max", e1, e2) -> if eval e1 env > eval e2 env then eval e1 env else eval e2 env
-    | Prim("min", e1, e2) -> if eval e1 env < eval e2 env then eval e1 env else eval e2 env
-    | Prim("==", e1, e2) -> if (eval e1 env) = (eval e2 env) then 1 else 0
-    max min == *)
-    //| Prim _            -> failwith "";;
 
 let e1v  = eval e1 env;;
 let e2v1 = eval e2 env;;
