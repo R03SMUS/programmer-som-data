@@ -378,3 +378,19 @@ let intsToFile (inss : int list) (fname : string) =
     System.IO.File.WriteAllText(fname, text);;
 
 (* -----------------------------------------------------------------  *)
+
+(* opagve 2.4 *)
+let rec sinstrToInt sinstr = 
+    match sinstr with
+    | SCstI x -> [0;x]
+    | SVar x -> [1;x]
+    | SAdd -> [2]
+    | SSub -> [3]
+    | SMul -> [4]
+    | SPop -> [5]
+    | SSwap -> [6]
+
+let assemble sinstrlst =
+    List.fold (fun acc sintr -> acc @ (sinstrToInt sintr)) [] sinstrlst
+
+(* opgave 2.4 *)
