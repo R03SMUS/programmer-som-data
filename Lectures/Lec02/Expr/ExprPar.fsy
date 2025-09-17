@@ -12,6 +12,7 @@
 %token END IN LET
 %token LPAR RPAR
 %token EOF
+%token IF THEN ELSE
 
 %left MINUS PLUS        /* lowest precedence  */
 %left TIMES             /* highest precedence */
@@ -34,4 +35,5 @@ Expr:
   | Expr TIMES Expr                     { Prim("*", $1, $3) }
   | Expr PLUS  Expr                     { Prim("+", $1, $3) }  
   | Expr MINUS Expr                     { Prim("-", $1, $3) } 
+  | IF Expr THEN Expr ELSE Expr         { If($2, $4, $6)    }
 ;
