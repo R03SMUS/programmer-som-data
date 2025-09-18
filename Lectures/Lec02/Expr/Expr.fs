@@ -1,7 +1,6 @@
 (* File Expr/Expr.fs *) 
 
 (* Simple expression language with various evaluators and compilers *)
-
 module Expr
 
 open System.IO
@@ -335,7 +334,3 @@ let intsToFile (inss : int list) (fname : string) =
     System.IO.File.WriteAllText(fname, text);;
 
 
-// 3.6 !
-let compString str = 
-    let e = fromString str
-    scomp e []
