@@ -133,8 +133,25 @@ You should then be able to write `fslex`and `fsyacc` from any folder.
 Always remember to start a new terminal or source your `.zshrc` or
 `.bashrc` files before your configuration changes will take affect.
 
-For Windows you can obtain a similar setup with e.g., `.bat` or `.ps`
-scripts that works from the CMD or PowerShell commandline.
+##### Windows
+
+On Windows you cannot make symlinks and aliases the same way, but you can get the same effect my making 2 .cmd files, and adding them to your PATH.
+
+The cmd files should contain the command you want to run, for fslex.cmd this is:
+
+```cmd
+dotnet <path_to_fsharp_folder>/fslexyacc.11.3.0/build/fslex/net6.0/fslex.dll
+```
+and fsyacc.cmd:
+```cmd
+dotnet <path_to_fsharp_folder>/fslexyacc.11.3.0/build/fsyacc/net6.0/fsyacc.dll
+```
+Next add the folder with `fslex.cmd` and `fsyacc.cmd` to your PATH environment variable.
+To do this either search for "Edit environment variables for your account" or use Win+R to open a run window, and type `SystemPropertiesAdvanced` then enter, and then click "Environment Variables" at the bottom. Under "User variables for <your_user>" double click on Path, and add a new entry with the path to the folder with our .cmd files.
+
+After restarting your terminal, you should now be able to run fslex and fsyacc anywhere in both cmd and Powershell.
+When typing a command, Windows will look in all folders in PATH, and if it finds a .cmd with a matching name, it will run it.
+
 
 #### Mac/Linux using Mono
 
