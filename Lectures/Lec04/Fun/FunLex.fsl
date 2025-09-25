@@ -57,6 +57,11 @@ rule Token = parse
   | '('             { LPAR }
   | ')'             { RPAR }
   | eof             { EOF }
+<<<<<<< HEAD
+=======
+  | "&&"            { AND } // Tilføjet
+  | "||"            { OR } // Tilføjet
+>>>>>>> 82d4b0c (Finish 4.5)
   | _               { failwith "Lexer error: illegal symbol" }
 
 and SkipComment = parse
