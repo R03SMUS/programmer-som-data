@@ -24,7 +24,7 @@ let rec lookup env x =
 
 type value = 
   | Int of int
-  | Closure of string * string * expr * value env       (* (f, x, fBody, fDeclEnv) *)
+  | Closure of string * string list * expr * value env       (* (f, x, fBody, fDeclEnv) *)
 
 let rec eval (e : expr) (env : value env) : int =
     match e with 
@@ -59,8 +59,15 @@ let rec eval (e : expr) (env : value env) : int =
       let fClosure = lookup env f
       match fClosure with
       | Closure (f, x, fBody, fDeclEnv) ->
-        let xVal = Int(eval eArg env)
-        let fBodyEnv = (x, xVal) :: (f, fClosure) :: fDeclEnv
+        // her List.zip x med et eller andet idk.
+        // x er liste af parameter
+        // eArg er liste af argumenter
+        let e2 = [ for e in eArg -> Int(eval e env) ]
+        let zippedlist = List.zip x e2
+        let fBodyEnv = zippedlist @ ((f, fClosure) :: fDeclEnv)
+        // FØR
+        //let xVal = Int(eval eArg env)
+        //let fBodyEnv = (x, xVal) :: (f, fClosure) :: fDeclEnv
         eval fBody fBodyEnv
       | _ -> failwith "eval Call: not a function"
     | Call _ -> failwith "eval Call: not first-order function"
