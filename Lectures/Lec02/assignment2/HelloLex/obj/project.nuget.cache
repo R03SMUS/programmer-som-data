@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "7BBuqn3+2/I=",
+  "success": true,
+  "projectFilePath": "/home/rasmus/programmer-som-data/ProgramsAsDataCodeE2025/Lectures/Lec02/assignment2/HelloLex/hello3.fsproj",
+  "expectedPackageFiles": [
+    "/home/rasmus/.nuget/packages/fsharp.core/9.0.201/fsharp.core.9.0.201.nupkg.sha512"
+  ],
+  "logs": []
+}
