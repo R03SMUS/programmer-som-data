@@ -2,6 +2,9 @@ module RunProgram
 
 open ParseAndRun
 
+// Run dotnet fsi -r ~/fsharp/FsLexYacc.Runtime.dll Util.fs Absyn.fs FunPar.fs FunLex.fs Parse.fs Fun.fs ParseAndRun.fs 4_1_AND_4_2.fs
+// Then scroll almost all the way to the top
+
 // 4.1
 let runPrograms programs =
     for program in programs do
