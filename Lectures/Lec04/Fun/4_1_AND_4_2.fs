@@ -11,19 +11,19 @@ let runPrograms programs =
         let result = run (fromString program)
         printfn "Program: '%s' resulted in: %A" program result
 
-let programs4_1 = [
+(*let programs4_1 = [
     "let x = 1 in let y = 42 in x*y + 2 end end"
     "1 + 2 + 3 + 4 + 6"
 ]
 printfn "______________ 4.1 ______________"
-runPrograms programs4_1
+runPrograms programs4_1*)
 
 // 4.2
 let programs4_2 = [
-    "let f n = if n=0 then 0 else n + f (n-1) in f 1000 end"
-    "let f n = if n=0 then 1 else 3 * f (n-1) in f 11 end"
-    "let f n = if n=0 then 1 else 3 * f (n-1) in let g n = if n=0 then 1 else f n + g (n-1) in g 11 end end"
-    "let g n = if n=0 then 0 else let i = n in let f k = if k=0 then 1 else i * f (k-1) in f 8 + g (n-1) end end in g 10 end"
+    "let f n x = if n=0 then 0 else n + f (n-1) 10 in f 1000  10 end"
+    "let f n x = if n=0 then 1 else 3 * f (n-1) 10     in f 11 10 end"
+    //"let f n x = if n=0 then 1 else 3 * f (n-1) in let g n = if n=0 then 1 else f n + g (n-1) in g 11 end end"
+    //"let g n x = if n=0 then 0 else let i = n in let f k = if k=0 then 1 else i * f (k-1) in f 8 + g (n-1) end end in g 10 end"
 ]
 printfn "______________ 4.2 ______________"
 runPrograms programs4_2
