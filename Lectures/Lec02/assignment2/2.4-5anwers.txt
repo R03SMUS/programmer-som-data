@@ -1,0 +1,14 @@
+1.
+[0-9] regex matches any single integer from 0-9, and it is associated with char
+
+2.
+hello.fs and hello.fsi are generated, with 3 states
+
+6.
+The result is expected because it matches on the longest possible substring that corresponds to the regex rules
+So for example:
+34 matches the both the first and get recognized as such
+34.24 matches both the first and second regex, but the second regex has a longer match, and there is recognized
+34,34 matches only the first rule up until the comma, and is recognized as 34. It doesnt match the second rule, becuase there is no period.
+
+

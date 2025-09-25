@@ -1,0 +1,17 @@
+Main
+
+=> let name = expr in expr end eof
+
+=> let z = expr in expr end eof
+
+=> let z = expr in expr + expr end eof
+
+=> let z = expr in expr + expr * expr end eof
+
+=> let z = expr in expr + expr * 3 end eof
+
+=> let z = expr in expr + 2 * 3 end eof
+
+=> let z = expr in z + 2 * 3 end eof
+
+=> let z = 17 in z + 2 * 3 end eof
