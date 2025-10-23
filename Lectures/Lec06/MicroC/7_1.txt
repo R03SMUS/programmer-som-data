@@ -1,0 +1,17 @@
+In the readme, only (A) fromFile (without run) was only called on "ex1.c" so we assume, we only need to annotate the abstract syntax tree for that.
+
+Prog
+    [Fundec // DECLARATION
+       (None, "main", [(TypI, "n")],
+        Block
+          [Stmt // STATEMENT
+             (While // STATEMENT
+                (Prim2 (">", Access (AccVar "n"), CstI 0), // EXPRESSION
+                 Block
+                   [Stmt (Expr (Prim1 ("printi", Access (AccVar "n")))); // STATEMENT
+                    Stmt // STATEMENT
+                      (Expr
+                         (Assign // EXPRESSION
+                            (AccVar "n",
+                             Prim2 ("-", Access (AccVar "n"), CstI 1))))])); // EXPRESSION
+           Stmt (Expr (Prim1 ("printc", CstI 10)))])] // STATEMENT

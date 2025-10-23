@@ -14,12 +14,13 @@ let nl = CstI 10
 %token <int> CSTINT CSTBOOL
 %token <string> CSTSTRING NAME
 
-%token CHAR ELSE IF INT NULL PRINT PRINTLN RETURN VOID WHILE
+%token CHAR ELSE IF INT NULL PRINT PRINTLN RETURN VOID WHILE FOR /* tilføjet FOR */
 %token PLUS MINUS TIMES DIV MOD
 %token EQ NE GT LT GE LE
 %token NOT SEQOR SEQAND
 %token LPAR RPAR LBRACE RBRACE LBRACK RBRACK SEMI COMMA ASSIGN AMP
 %token EOF
+%token PLUSPLUS MINUSMINUS /* tilføjet */
 
 %right ASSIGN             /* lowest precedence */
 %nonassoc PRINT
@@ -29,7 +30,7 @@ let nl = CstI 10
 %left GT LT GE LE
 %left PLUS MINUS
 %left TIMES DIV MOD 
-%nonassoc NOT AMP 
+%nonassoc NOT AMP PLUSPLUS MINUSMINUS
 %nonassoc LBRACK          /* highest precedence  */
 
 %start Main
@@ -88,11 +89,18 @@ StmtOrDecSeq:
   | Vardec SEMI StmtOrDecSeq            { Dec (fst $1, snd $1) :: $3 }
 ;
 
+// tilføjet
+OptExpr:
+    /* empty */   { None }
+  | Expr          { Some $1 }
+;
+
 Stmt: 
     StmtM                               { $1 }
   | StmtU                               { $1 }
 ;
 
+// tilføjet for logik
 StmtM:  /* No unbalanced if-else */
     Expr SEMI                           { Expr($1)             }
   | RETURN SEMI                         { Return None          }
@@ -100,12 +108,37 @@ StmtM:  /* No unbalanced if-else */
   | Block                               { $1                   }
   | IF LPAR Expr RPAR StmtM ELSE StmtM  { If($3, $5, $7)       }
   | WHILE LPAR Expr RPAR StmtM          { While($3, $5)        }
+  | FOR LPAR OptExpr SEMI OptExpr SEMI OptExpr RPAR StmtM {
+    Block (
+      (match $3 with None -> [] | Some e -> [Stmt (Expr e)]) @
+      [Stmt (While(
+        (match $5 with None -> CstI 1 | Some e -> e),
+        (let decs =
+          match $9 with Block ds -> ds | s -> [Stmt s]
+          in
+          Block (decs @ (match $7 with None -> [] | Some e -> [Stmt (Expr e)])))
+      ))]
+    )
+  }
 ;
 
+// tilføjet for logik
 StmtU:
     IF LPAR Expr RPAR StmtM ELSE StmtU  { If($3, $5, $7)       }
   | IF LPAR Expr RPAR Stmt              { If($3, $5, Block []) }
   | WHILE LPAR Expr RPAR StmtU          { While($3, $5)        }
+  | FOR LPAR OptExpr SEMI OptExpr SEMI OptExpr RPAR StmtU {
+    Block (
+      (match $3 with None -> [] | Some e -> [Stmt (Expr e)]) @
+      [Stmt (While(
+        (match $5 with None -> CstI 1 | Some e -> e),
+        (let decs =
+          match $9 with Block ds -> ds | s -> [Stmt s]
+          in
+          Block (decs @ (match $7 with None -> [] | Some e -> [Stmt (Expr e)])))
+      ))]
+    )
+  }
 ;
 
 Expr: 
@@ -139,6 +172,8 @@ AtExprNotAccess:
     Const                               { CstI $1             }
   | LPAR ExprNotAccess RPAR             { $2                  } 
   | AMP Access                          { Addr $2             }
+  | PLUSPLUS Access                     { PreInc $2 }
+  | MINUSMINUS Access                   { PreDec $2 }
 ;
 
 Access:

@@ -27,7 +27,8 @@ let keyword s =
     | "return"  -> RETURN
     | "true"    -> CSTBOOL 1
     | "void"    -> VOID 
-    | "while"   -> WHILE         
+    | "while"   -> WHILE    
+    | "for"     -> FOR // tilføjet
     | _         -> NAME s
  
 let cEscape s = 
@@ -52,6 +53,8 @@ rule Token = parse
                     { keyword (lexemeAsString lexbuf) }
   | '+'             { PLUS } 
   | '-'             { MINUS } 
+  | "++"            {PLUSPLUS} // tilføjet
+  | "--"            {MINUSMINUS} // tilføjet
   | '*'             { TIMES } 
   | '/'             { DIV } 
   | '%'             { MOD }                     
@@ -64,7 +67,7 @@ rule Token = parse
   | "<="            { LE }
   | "||"            { SEQOR }                     
   | "&&"            { SEQAND }                     
-  | "&"             { AMP }                     
+  | "&"             { AMP }                   
   | "!"             { NOT }                     
   | '('             { LPAR }
   | ')'             { RPAR }

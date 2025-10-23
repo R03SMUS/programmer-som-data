@@ -23,6 +23,8 @@ and expr =
   | Andalso of expr * expr           (* Sequential and              *)
   | Orelse of expr * expr            (* Sequential or               *)
   | Call of string * expr list       (* Function call f(...)        *)
+  | PreInc of access (* tilføjet *)
+  | PreDec of access (* tilføjet *)
                                                                    
 and access =                                                       
   | AccVar of string                 (* Variable access        x    *) 
