@@ -25,6 +25,7 @@ and expr =
   | Call of string * expr list       (* Function call f(...)        *)
   | PreInc of access
   | PreDec of access
+  | Cond of expr * expr * expr 
                                                                  
 and access =                                                       
   | AccVar of string                 (* Variable access        x    *) 
