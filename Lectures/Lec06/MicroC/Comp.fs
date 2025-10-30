@@ -165,6 +165,8 @@ and cStmtOrDec stmtOrDec (varEnv : varEnv) (funEnv : funEnv) : varEnv * instr li
 and cExpr (e : expr) (varEnv : varEnv) (funEnv : funEnv) : instr list = 
     match e with
     | Access acc     -> cAccess acc varEnv funEnv @ [LDI] 
+    | PreInc acc     -> cAccess acc varEnv funEnv @ [DUP; LDI; CSTI 1; ADD; STI]
+    | PreDec acc     -> cAccess acc varEnv funEnv @ [DUP; LDI; CSTI -1; ADD; STI]
     | Assign(acc, e) -> cAccess acc varEnv funEnv @ cExpr e varEnv funEnv @ [STI]
     | CstI i         -> [CSTI i]
     | Addr acc       -> cAccess acc varEnv funEnv
