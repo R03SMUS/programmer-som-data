@@ -1,0 +1,21 @@
+ex8:
+
+24 	19 0 5 		25 			15 1 		13 	0 0 1 0 20000000 12 15 -1 16 35 13 0 0 1 13 0 0 1 11 0 1 2 12 15 -1 15 0 13 0 0 1 11 18 18 15 -1 21 -1
+LDARGS; CALL (0, "L1"); STOP; 	Label "L1"; 	INCSP 1; 	GETBP; CSTI 0; ADD;
+   CSTI 20000000; STI; INCSP -1; GOTO "L3"; Label "L2"; GETBP; CSTI 0; ADD;
+   GETBP; CSTI 0; ADD; LDI; CSTI 1; SUB; STI; INCSP -1; INCSP 0; Label "L3";
+   GETBP; CSTI 0; ADD; LDI; IFNZRO "L2"; INCSP -1; RET -1
+
+prog1
+0 	20000000 	16 	7 	0 	1 	2 	9 	18 	4 	25
+CSTI 	20000000; 	GOTO 	7; 	CSTI 	1;	SUB;	DUP;	IFNZRO 4;	STOP; 
+
+
+ex8.c is slower because the program, keeps needing to lookup what value that i has. while prog1 just duplicates the value of the top of the stack, and checks if it is zero. there is no lookup for i needed
+
+ex8.c
+while i (lookup, check if zero)
+	i (assign) = i (lookup) - 1
+
+prog1
+top of stack - 1, duplicate top of stack, check if zero

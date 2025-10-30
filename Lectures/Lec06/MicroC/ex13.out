@@ -1,1 +1,16 @@
 24 19 1 5 25 15 1 13 0 1 1 0 1889 12 15 -1 16 95 13 0 1 1 13 0 1 1 11 0 1 1 12 15 -1 13 0 1 1 11 0 4 5 0 0 6 17 77 13 0 1 1 11 0 100 5 0 0 6 8 18 73 13 0 1 1 11 0 400 5 0 0 6 16 75 0 1 16 79 0 0 17 91 13 0 1 1 11 22 15 -1 16 93 15 0 15 0 13 0 1 1 11 13 0 0 1 11 7 18 18 15 -1 21 0
+
+LDARGS; CALL (1, "L1"); STOP; Label "L1"; INCSP 1; GETBP; CSTI 1; ADD;
+   CSTI 1889; STI; INCSP -1; GOTO "L3"; Label "L2"; GETBP; CSTI 1; ADD; GETBP;
+   CSTI 1; ADD; LDI; CSTI 1; ADD; STI; INCSP -1; GETBP; CSTI 1; ADD; LDI;
+   CSTI 4; MOD; CSTI 0; EQ; IFZERO "L7"; GETBP; CSTI 1; ADD; LDI; CSTI 100;
+   MOD; CSTI 0; EQ; NOT; IFNZRO "L9"; GETBP; CSTI 1; ADD; LDI; CSTI 400; MOD;
+   CSTI 0; EQ; GOTO "L8"; Label "L9"; CSTI 1; Label "L8"; GOTO "L6";
+   Label "L7"; CSTI 0; Label "L6"; IFZERO "L4"; GETBP; CSTI 1; ADD; LDI;
+   PRINTI; INCSP -1; GOTO "L5"; Label "L4"; INCSP 0; Label "L5"; INCSP 0;
+   Label "L3"; GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0; ADD; LDI; LT;
+   IFNZRO "L2"; INCSP -1; RET 0]
+   
+   
+   Loops and conditionals both use jumps, but with the difference, of loops jump to the same point if the condition is met
+   while conditionals branch out in different direction, depending on the conditional, skips some of the code.
