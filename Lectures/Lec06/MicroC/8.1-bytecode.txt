@@ -1,0 +1,25 @@
+ex3.c:
+
+LDARGS; CALL (1, "L1"); STOP; 															// void main(int n) {}
+Label "L1"; INCSP 1; GETBP; CSTI 1; ADD; CSTI 0; STI; INCSP -1; GOTO "L3"; 									// int i; i = 0
+Label "L2"; GETBP; CSTI 1; ADD; LDI; PRINTI; INCSP -1; GETBP; CSTI 1; ADD; GETBP; CSTI 1; ADD; LDI; CSTI 1; ADD; STI; INCSP -1; INCSP 0; 	// print i; i = i + 1 
+Label "L3"; GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0; ADD; LDI; LT; IFNZRO "L2"; INCSP -1; RET 0]							// while (i < n) {}
+
+ex5.c:
+
+LDARGS; CALL (1, "L1"); STOP; 										// void main(int n){}
+
+Label "L1"; INCSP 1; GETBP; CSTI 1; ADD; GETBP; CSTI 0; ADD; LDI; STI; INCSP -1; 			// int r; r = n;  
+
+NESTED CODEBLOCK: 
+INCSP 1; GETBP; CSTI 0; ADD; LDI; GETBP; CSTI 2; ADD; CALL (2, "L2"); INCSP -1;  			// {int r; square(n, &r); print r;}
+GETBP; CSTI 2; ADD; LDI; PRINTI; INCSP -1; INCSP -1; 
+NESTED END:
+
+GETBP; CSTI 1; ADD; LDI; PRINTI; INCSP -1; INCSP -1; RET 0; 						// print r;
+  
+Label "L2"; GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0; ADD; LDI; GETBP; CSTI 0; ADD; 			//void square(int i, int*rp) {*rp = i * i;}
+LDI; MUL; STI; INCSP -1; INCSP 0; RET 1]	
+
+
+The nested scope is visible by the bytecode increasing the stack for the code in the nested block, and shrinking the stack without doing anything to the stack before essentially deleting the stack values
