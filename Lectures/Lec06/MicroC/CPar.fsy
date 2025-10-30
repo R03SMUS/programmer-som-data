@@ -14,8 +14,8 @@ let nl = CstI 10
 %token <int> CSTINT CSTBOOL
 %token <string> CSTSTRING NAME
 
-%token CHAR ELSE IF INT NULL PRINT PRINTLN RETURN VOID WHILE
-%token PLUS MINUS TIMES DIV MOD QUESTION COLON
+%token CHAR ELSE IF INT NULL PRINT PRINTLN RETURN VOID WHILE SWITCH CASE
+%token PLUS MINUS TIMES DIV MOD QUESTION COLON 
 %token EQ NE GT LT GE LE
 %token NOT SEQOR SEQAND
 %token LPAR RPAR LBRACE RBRACE LBRACK RBRACK SEMI COMMA ASSIGN AMP PREINC PREDEC
@@ -101,6 +101,7 @@ StmtM:  /* No unbalanced if-else */
   | Block                               { $1                   }
   | IF LPAR Expr RPAR StmtM ELSE StmtM  { If($3, $5, $7)       }
   | WHILE LPAR Expr RPAR StmtM          { While($3, $5)        }
+  | SWITCH LPAR Expr RPAR LBRACE Cases RBRACE { Switch($3, $6) }
 ;
 
 StmtU:
@@ -174,3 +175,10 @@ Type:
     INT                                 { TypI     }
   | CHAR                                { TypC     }
 ;
+
+Cases:
+    Case { [$1] }
+  | Case Cases  { $1 :: $2 }
+
+Case:
+    CASE CSTINT COLON Block { ($2, $4) }
